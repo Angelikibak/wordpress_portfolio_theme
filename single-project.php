@@ -10,11 +10,9 @@
                     <h1 class="single-project__title"><?php the_title(); ?></h1>
                 </header>
 
-                <?php if (has_post_thumbnail()) : ?>
-                    <div class="single-project__featured-image">
-                        <?php the_post_thumbnail('full'); ?>
-                    </div>
-                <?php endif; ?>
+                <div class="single-project__content">
+                    <?php the_content(); ?>
+                </div>
 
             </article>
         <?php endwhile; ?>

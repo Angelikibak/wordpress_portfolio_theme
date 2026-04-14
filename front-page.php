@@ -1,56 +1,130 @@
-<?php get_header(); ?>
+<?php
+get_header();
 
-<main class="site-main home-page">
+$categories = get_terms(array(
+    'taxonomy'   => 'project_category',
+    'hide_empty' => true,
+));
 
-    <section class="work-gallery" aria-label="Portfolio projects">
-        <div class="work-gallery__inner">
+$default_category_slug = 'concerts';
+$default_project = null;
+$default_category = null;
 
-            <?php
-            $projects_query = new WP_Query(array(
-                'post_type'      => 'project',
-                'posts_per_page' => -1,
-                'post_status'    => 'publish',
-            ));
-            ?>
+if (!empty($categories) && !is_wp_error($categories)) {
+    foreach ($categories as $category) {
+        if ($category->slug === $default_category_slug) {
+            $default_category = $category;
+            break;
+        }
+    }
 
-            <?php if ($projects_query->have_posts()) : ?>
-                <?php while ($projects_query->have_posts()) : $projects_query->the_post(); ?>
-                    <article class="work-item">
-                        <a href="<?php the_permalink(); ?>">
-                            <?php if (has_post_thumbnail()) : ?>
-                                <?php the_post_thumbnail('large'); ?>
-                            <?php endif; ?>
+    if (!$default_category) {
+        $default_category = $categories[0];
+    }
 
-                            <h2><?php the_title(); ?></h2>
-                        </a>
-                    </article>
-                <?php endwhile; ?>
+    $default_projects = new WP_Query(array(
+        'post_type'      => 'project',
+        'posts_per_page' => -1,
+        'post_status'    => 'publish',
+        'tax_query'      => array(
+            array(
+                'taxonomy' => 'project_category',
+                'field'    => 'term_id',
+                'terms'    => $default_category->term_id,
+            ),
+        ),
+    ));
 
-                <?php wp_reset_postdata(); ?>
-            <?php else : ?>
-                <p>No projects found yet.</p>
+    $default_projects_data = array();
+
+    if ($default_projects->have_posts()) {
+        while ($default_projects->have_posts()) {
+            $default_projects->the_post();
+
+            $image_url = get_the_post_thumbnail_url(get_the_ID(), 'full');
+
+            if ($image_url) {
+                $default_projects_data[] = array(
+                    'title' => get_the_title(),
+                    'link'  => get_permalink(),
+                    'image' => $image_url,
+                );
+            }
+        }
+        wp_reset_postdata();
+    }
+
+    if (!empty($default_projects_data)) {
+        $default_project = $default_projects_data[0];
+    }
+}
+?>
+
+<main class="homepage-stage">
+
+    <a
+        class="homepage-stage__background-link"
+        href="<?php echo $default_project ? esc_url($default_project['link']) : '#'; ?>"
+        id="homepage-background-link"
+        aria-label="<?php echo $default_project ? esc_attr($default_project['title']) : 'Open project'; ?>"
+    >
+        <div
+            class="homepage-stage__background"
+            id="homepage-background"
+            <?php if ($default_project && !empty($default_project['image'])) : ?>
+                style="background-image: url('<?php echo esc_url($default_project['image']); ?>');"
             <?php endif; ?>
+        ></div>
+    </a>
 
-        </div>
-    </section>
+    <div class="homepage-stage__overlay">
+        <div class="homepage-stage__categories">
+            <?php if (!empty($categories) && !is_wp_error($categories)) : ?>
+                <?php foreach ($categories as $category) : ?>
+                    <?php
+                    $category_projects = new WP_Query(array(
+                        'post_type'      => 'project',
+                        'posts_per_page' => -1,
+                        'post_status'    => 'publish',
+                        'tax_query'      => array(
+                            array(
+                                'taxonomy' => 'project_category',
+                                'field'    => 'term_id',
+                                'terms'    => $category->term_id,
+                            ),
+                        ),
+                    ));
 
-    <section id="about" class="home-section">
-        <div class="home-section__inner">
-            <h2>About</h2>
-            <p>
-                Short photographer bio goes here. Keep it simple, personal, and minimal.
-            </p>
-        </div>
-    </section>
+                    $projects_data = array();
 
-    <section id="contact" class="home-section">
-        <div class="home-section__inner">
-            <h2>Contact</h2>
-            <p>
-                <a href="mailto:hello@example.com">hello@example.com</a>
-            </p>
+                    if ($category_projects->have_posts()) {
+                        while ($category_projects->have_posts()) {
+                            $category_projects->the_post();
+
+                            $image_url = get_the_post_thumbnail_url(get_the_ID(), 'full');
+
+                            if ($image_url) {
+                                $projects_data[] = array(
+                                    'title' => get_the_title(),
+                                    'link'  => get_permalink(),
+                                    'image' => $image_url,
+                                );
+                            }
+                        }
+                        wp_reset_postdata();
+                    }
+                    ?>
+                    <a
+                        class="homepage-stage__category-link <?php echo ($default_category && $category->term_id === $default_category->term_id) ? 'is-active' : ''; ?>"
+                        href="<?php echo esc_url(get_term_link($category)); ?>"
+                        data-projects="<?php echo esc_attr(wp_json_encode($projects_data)); ?>"
+                    >
+                        <?php echo esc_html($category->name); ?>
+                    </a>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
-    </section>
+    </div>
 
 </main>
 
