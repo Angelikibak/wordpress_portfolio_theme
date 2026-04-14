@@ -6,6 +6,20 @@
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
-<header>
-    <p>Photographer Name</p>
+
+<?php wp_body_open(); ?>
+
+<header class="site-header">
+    <div class="site-header__inner">
+        <a class="site-title" href="<?php echo esc_url(home_url('/')); ?>">
+            Aliki Seferou
+        </a>
+
+        <nav class="site-nav" aria-label="Main navigation">
+            <a href="<?php echo esc_url(home_url('/')); ?>">Work</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+            <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </nav>
+    </div>
 </header>

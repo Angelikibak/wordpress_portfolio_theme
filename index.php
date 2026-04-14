@@ -1,10 +1,7 @@
-<?php
-get_header();
-?>
+<?php get_header(); ?>
 
 <main>
-  <h1>Hello from the custom theme</h1>
+    <h1>Fallback template</h1>
 </main>
 
-<?php
-get_footer();
+<?php get_footer(); ?>
