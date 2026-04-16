@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const CATEGORY_INTERVAL = 5000;
+  const CATEGORY_INTERVAL = 2000;
 
   let categoryState = categoryLinks.map((link) => ({
     link,
