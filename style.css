@@ -222,7 +222,7 @@ a {
 
 .single-project {
   min-height: 100vh;
-  padding: 56px 24px 72px;
+  padding: 56px 24px 60px;
   background: #f6f3ee;
   color: #111;
 }
@@ -319,7 +319,7 @@ a {
 
 .category-archive {
   min-height: 100vh;
-  padding: 90px 24px 24px;
+  padding: 90px 24px 104px;
   background: #f6f3ee;
   color: #111;
 }
@@ -427,6 +427,7 @@ a {
   grid-template-columns: 1fr 1fr;
   height: 100vh;
   overflow: hidden;
+  font-family: 'Kedebideri', Arial, Helvetica, sans-serif;
   background: #f6f3ee;
   color: #111;
 }
@@ -528,12 +529,26 @@ a {
   }
 
   .single-project {
-    padding: 24px 18px 48px;
+    padding: 44px 18px 48px;
+  }
+
+  .site-footer {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    padding: 10px 18px;
+    background: #111;
   }
 
   .site-footer__inner {
     grid-template-columns: 1fr;
     row-gap: 6px;
+  }
+
+  .site-footer__meta,
+  .site-footer__rights {
+    font-size: 0.56rem;
+    line-height: 1.25;
   }
 
   .site-footer__rights {
@@ -543,7 +558,7 @@ a {
   }
 
   .category-archive {
-    padding: 78px 18px 18px;
+    padding: 78px 18px 48px;
   }
 
   .category-archive__header {

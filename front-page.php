@@ -6,6 +6,8 @@ $categories = get_terms(array(
     'hide_empty' => true,
 ));
 
+$categories = custom_portfolio_sort_project_categories_by_order($categories);
+
 $default_category_slug = 'concerts';
 $default_project = null;
 $default_category = null;
